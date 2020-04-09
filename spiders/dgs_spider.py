@@ -9,6 +9,7 @@ from dateutil.parser import *
 import plotly.express as px
 import plotly.graph_objects as go
 import unidecode
+import json
 
 class DGSSpider(scrapy.Spider):
 
@@ -29,14 +30,14 @@ class DGSSpider(scrapy.Spider):
 
             last_report_link = response.selector.xpath(path).get()
 
-            self.get_all_dgs_data(last_report_link, final_data, date_text)
-            
+            self.extract_daily_count(last_report_link, final_data, date_text)
+
+        self.generate_results(final_data)             
+
         self.show_graph(final_data)
-        for data in final_data:
-            print("Deaths: {deaths} - Cases: {cases}; Date: {date}".format(deaths=data.deaths, cases=data.cases, date=data.date) )
 
 
-    def get_all_dgs_data(self, last_report_link, data_list: list, data):
+    def extract_daily_count(self, last_report_link, data_list: list, data):
         response = requests.get(last_report_link)
         
         with open('/tmp/' + os.path.basename(os.path.normpath(last_report_link)) , 'wb') as f:
@@ -56,11 +57,17 @@ class DGSSpider(scrapy.Spider):
                     if content_words[i - 1].strip() == 'asos' or content_words[i - 1].strip() == 'casos':
                         confirmed_cases_number = content_words[i + 1].strip()
                 elif unidecode.unidecode(content_words[i].strip()) == unidecode.unidecode('Obitos'):
-                    deaths = content_words[i + 1].strip()
-
-            #deaths = content.split()[101]
+                    deaths = content_words[i + 1].strip()            
 
             data_list.append(DGSData(deaths, confirmed_cases_number, data))
+
+    def generate_results(self, data):
+        if not os.path.exists('results'):
+            os.makedirs('results')
+        with open("results/result.json", 'w') as file:
+            maped_data = map(lambda d: d.to_json(), data)
+            json.dump(list(maped_data), file)
+
 
     def show_graph(self, data_list:list):
         fig = go.Figure()
@@ -91,9 +98,14 @@ class DGSSpider(scrapy.Spider):
 
 class DGSData:
 
-   def __init__(self, deaths, cases, date):
+    def __init__(self, deaths, cases, date):
        self.deaths = deaths
        self.cases = cases
        self.date = date
 
-    
+    def to_json(self):
+        return {
+            "deaths": self.deaths,
+            "cases": self.cases,
+            "date": self.date.__str__()
+        }
