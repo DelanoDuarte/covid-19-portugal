@@ -24,20 +24,26 @@ using the browser with the link below:
 
 First, start the configure the flask server:
 
-WINDOWS:
+**WINDOWS:**
+
 `set FLASK_APP=api/app.py`
 
-LINUX, MAC:
+**(LINUX, MAC):** 
 
 `export FLASK_APP=api/app.py`
 
-Run Flask server:
+**Run Flask server:**
 
 `flask run`
 
-Link:
+**or**
 
-[text](https://127.0.0.1:5000/extractor/daily)
+``py app.py``
+
+**Link to Test(Local):**
+
+[Daily common data](https://127.0.0.1:5000/extractor/daily)
+
 
 ## Sample Result Plotly Chart:
 **Last 7(seven) days** 

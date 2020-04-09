@@ -34,7 +34,7 @@ class DGSSpider(scrapy.Spider):
 
         self.generate_results(final_data)             
 
-        self.show_graph(final_data)
+        # self.show_graph(final_data)
 
 
     def extract_daily_count(self, last_report_link, data_list: list, data):

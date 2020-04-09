@@ -1,7 +1,13 @@
 from flask import Blueprint
 import json
+from scrapy.crawler import CrawlerProcess
+from spiders.dgs_spider import DGSSpider
+
+import threading
 
 extractor = Blueprint('extractor', __name__)
+
+processor = CrawlerProcess()
 
 @extractor.route("/")
 def index():
@@ -12,5 +18,14 @@ def daily_data():
     with open("results/result.json", 'r') as json_file:
         data = json.load(json_file)
         return {"data": data}
+
+@extractor.route("/update")
+def update_date():
+    t = threading.Thread(target=start_spider)
+    t.start()
+    return {"data":"Update in Progress"}
     
-    
+
+def start_spider():
+    processor.crawl(DGSSpider)
+    processor.start()
