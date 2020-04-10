@@ -14,10 +14,9 @@ const CardsInfo = (props) => {
                             bodyStyle={{ backgroundColor: '#ff7a45' }} >
                             <Statistic
                                 title="Confimed Cases"
-                                value={11.28}
-                                precision={2}
+                                value={props.cases}
                                 valueStyle={{ color: '#000000' }}
-                                prefix={<ArrowUpOutlined />}
+                                prefix={<ArrowUpOutlined color="green" />}
                             />
                         </Card>
                     </Col>
@@ -26,8 +25,7 @@ const CardsInfo = (props) => {
                             bodyStyle={{ backgroundColor: '#ff4d4f' }}>
                             <Statistic
                                 title="Confimed Deaths"
-                                value={9.3}
-                                precision={2}
+                                value={props.deaths}
                                 valueStyle={{ color: '#000000' }}
                                 prefix={<ArrowDownOutlined />}
                             />

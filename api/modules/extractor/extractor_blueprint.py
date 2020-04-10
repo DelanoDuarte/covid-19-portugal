@@ -4,6 +4,7 @@ from scrapy.crawler import CrawlerProcess
 from spiders.dgs_spider import DGSSpider
 
 import threading
+import operator
 
 extractor = Blueprint('extractor', __name__)
 
@@ -17,7 +18,7 @@ def index():
 def daily_data():
     with open("results/result.json", 'r') as json_file:
         data = json.load(json_file)
-        return {"data": data}
+        return {"data": sorted(data, key=operator.itemgetter("date"))}
 
 @extractor.route("/update")
 def update_date():
