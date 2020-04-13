@@ -1,8 +1,7 @@
 from flask import Blueprint
-import json
 from scrapy.crawler import CrawlerProcess
 from spiders.dgs_spider import DGSSpider
-
+import json
 import threading
 import operator
 
@@ -18,14 +17,13 @@ def index():
 def daily_data():
     with open("results/result.json", 'r') as json_file:
         data = json.load(json_file)
-        return {"data": sorted(data, key=operator.itemgetter("date"))}
+        return {"data" : sorted(data, key=operator.itemgetter("date"))}
 
-@extractor.route("/update")
+@extractor.route("/crawl_data")
 def update_date():
     t = threading.Thread(target=start_spider)
     t.start()
-    return {"data":"Update in Progress"}
-    
+    return {"data" : "Crawling in Progress"}
 
 def start_spider():
     processor.crawl(DGSSpider)

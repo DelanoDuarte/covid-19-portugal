@@ -9,13 +9,22 @@ const Index = (props) => {
     const [lastCases, setLastCases] = useState(0)
     const [lastDeaths, setLasDeaths] = useState(0)
 
-    useEffect(() => {
-        CovidAPI.getDayliCount()
+    const getCountData = () => {
+        CovidAPI.getFullDataCount()
             .then((response) => {
-                setFullInfo(response.data)
-                setLastCases(response.data[response.data.length - 1].cases)
-                setLasDeaths(response.data[response.data.length - 1].deaths)
+                setLastCases(response.data.cases)
+                setLasDeaths(response.data.deaths)
             })
+    }
+
+    const getFullData = () => {
+        CovidAPI.getFullData()
+            .then(response => setFullInfo(response.data))
+    }
+
+    useEffect(() => {
+        getCountData()
+        getFullData()
     }, [])
 
     return (

@@ -6,8 +6,6 @@ from PyPDF2 import PdfFileReader
 import re
 import datetime
 from dateutil.parser import *
-import plotly.express as px
-import plotly.graph_objects as go
 import unidecode
 import json
 
@@ -33,9 +31,6 @@ class DGSSpider(scrapy.Spider):
             self.extract_daily_count(last_report_link, final_data, date_text)
 
         self.generate_results(final_data)             
-
-        # self.show_graph(final_data)
-
 
     def extract_daily_count(self, last_report_link, data_list: list, data):
         response = requests.get(last_report_link)
@@ -67,34 +62,6 @@ class DGSSpider(scrapy.Spider):
         with open("results/result.json", 'w') as file:
             maped_data = map(lambda d: d.to_json(), data)
             json.dump(list(maped_data), file)
-
-
-    def show_graph(self, data_list:list):
-        fig = go.Figure()
-
-        dates = []
-        cases = []
-        deaths = []
-
-        for d in data_list:
-            dates.append(d.date)
-            cases.append(d.cases)
-            deaths.append(d.deaths)
-
-        # Add traces
-        fig.add_trace(go.Scatter(
-                            x=dates, 
-                            y=cases,
-                            mode='lines+markers',
-                            name='Nº of Confirmed cases'))
-
-        fig.add_trace(go.Scatter(
-                            x=dates, 
-                            y=deaths,
-                            mode='lines+markers',
-                            name='Nº of Confirmed deaths'))
-
-        fig.show()
 
 class DGSData:
 
