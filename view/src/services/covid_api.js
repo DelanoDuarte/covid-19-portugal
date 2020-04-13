@@ -7,4 +7,17 @@ export default class CovidAPI {
             .then(res => res.data)
             .catch(error => console.log(error))
     }
+
+    static getFullDataCount() {
+        return axios.get("/extractor/full_data/count")
+            .then(res => res.data)
+            .catch(error => console.log(error))
+    }
+
+    static getFullData() {
+        return axios.get("/extractor/full_data")
+            .then(res => res.data)
+            .catch(error => console.log(error))
+    }
+
 }

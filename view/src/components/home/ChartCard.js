@@ -9,9 +9,9 @@ const ChartCard = (props) => {
     return (
         <div>
             <Card>
-                <ComposedChart width={1200} height={300} data={props.data}
+                <ComposedChart width={1300} height={400} data={props.data}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <XAxis dataKey="date" />
+                    <XAxis dataKey="dateRep" />
                     <YAxis />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
