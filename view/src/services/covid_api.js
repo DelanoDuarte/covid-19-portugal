@@ -9,13 +9,13 @@ export default class CovidAPI {
     }
 
     static getFullDataCount() {
-        return axios.get("/extractor/full_data/count")
+        return axios.get("/ue_data/full_data/count")
             .then(res => res.data)
             .catch(error => console.log(error))
     }
 
     static getFullData() {
-        return axios.get("/extractor/full_data")
+        return axios.get("/ue_data/full_data")
             .then(res => res.data)
             .catch(error => console.log(error))
     }

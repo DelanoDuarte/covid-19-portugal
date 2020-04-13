@@ -3,8 +3,8 @@ import { Layout, Menu } from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
-    UserOutlined,
     HomeOutlined,
+    DatabaseOutlined,
 } from '@ant-design/icons';
 
 import './SideBar.css'
@@ -31,6 +31,10 @@ class SideBar extends React.Component {
                         <Menu.Item key="1">
                             <HomeOutlined />
                             <span>Home</span>
+                        </Menu.Item>
+                        <Menu.Item key="2">
+                            <DatabaseOutlined />
+                            <span>Prediction</span>
                         </Menu.Item>
                     </Menu>
                 </Sider>
