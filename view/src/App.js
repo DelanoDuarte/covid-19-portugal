@@ -5,11 +5,13 @@ import './App.css';
 import 'antd/dist/antd.css';
 import SideBar from './components/layout/SideBar';
 import Routes from './routes';
+import NetworkAvailability from './components/common/NetworkAvailability';
 
 function App() {
   return (
     <SideBar>
       <div className="App">
+        <NetworkAvailability />
         <Router>
           <Routes />
         </Router>

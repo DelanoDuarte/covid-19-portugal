@@ -12,14 +12,16 @@ const Index = (props) => {
     const getCountData = () => {
         CovidAPI.getFullDataCount()
             .then((response) => {
-                setLastCases(response.data.cases)
-                setLasDeaths(response.data.deaths)
+                if (response && response.data) {
+                    setLastCases(response.data.cases)
+                    setLasDeaths(response.data.deaths)
+                }
             })
     }
 
     const getFullData = () => {
         CovidAPI.getFullData()
-            .then(response => setFullInfo(response.data))
+            .then(response => { if (response && response.data) setFullInfo(response.data) })
     }
 
     useEffect(() => {
