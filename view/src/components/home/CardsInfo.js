@@ -16,7 +16,9 @@ const CardsInfo = (props) => {
                                 title="Confimed Cases"
                                 value={props.cases}
                                 valueStyle={{ color: '#000000' }}
-                                prefix={<ArrowUpOutlined color="green" />}
+                                prefix={
+                                    (props.cases != 0 && <ArrowUpOutlined color="green" />)
+                                }
                             />
                         </Card>
                     </Col>
@@ -27,7 +29,9 @@ const CardsInfo = (props) => {
                                 title="Confimed Deaths"
                                 value={props.deaths}
                                 valueStyle={{ color: '#000000' }}
-                                prefix={<ArrowDownOutlined />}
+                                prefix={
+                                    (props.deaths != 0 && <ArrowDownOutlined />)
+                                }
                             />
                         </Card>
                     </Col>
