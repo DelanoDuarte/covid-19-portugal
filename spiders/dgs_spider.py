@@ -18,7 +18,6 @@ class DGSSpider(scrapy.Spider):
 
         final_data = []
         size_data = response.selector.xpath('//*[@id="content_easy"]/div[3]/ul[1]/li').getall()
-        print(len(size_data))
 
         for i in range(1 , 8):
             path = '//*[@id="content_easy"]/div[3]/ul[1]/li[{i}]/a/@href'.format(i = i)
@@ -29,6 +28,7 @@ class DGSSpider(scrapy.Spider):
             last_report_link = response.selector.xpath(path).get()
 
             self.extract_daily_count(last_report_link, final_data, date_text)
+            self.extract_cases_by_zone(last_report_link)
 
         self.generate_results(final_data)             
 
@@ -62,6 +62,17 @@ class DGSSpider(scrapy.Spider):
         with open("results/result.json", 'w') as file:
             maped_data = map(lambda d: d.to_json(), data)
             json.dump(list(maped_data), file)
+
+    def extract_cases_by_zone(self, last_report_link):
+
+        response = requests.get(last_report_link)
+        
+        with open('/tmp/' + os.path.basename(os.path.normpath(last_report_link)) , 'wb') as f:
+            f.write(response.content)
+            pdf = PdfFileReader('/tmp/' + os.path.basename(os.path.normpath(last_report_link)))
+            page2 = pdf.getPage(2)
+            content =  page2.extractText()
+            print(content)
 
 class DGSData:
 
