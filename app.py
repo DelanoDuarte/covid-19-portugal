@@ -12,7 +12,7 @@ CORS(app)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return {"data":"Api Running"}
 
 app.register_blueprint(extractor, url_prefix='/extractor')
 app.register_blueprint(ue_client_blueprint, url_prefix='/ue_data')

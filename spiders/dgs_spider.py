@@ -18,7 +18,6 @@ class DGSSpider(scrapy.Spider):
 
         final_data = []
         size_data = response.selector.xpath('//*[@id="content_easy"]/div[3]/ul[1]/li').getall()
-        print(len(size_data))
 
         for i in range(1 , 8):
             path = '//*[@id="content_easy"]/div[3]/ul[1]/li[{i}]/a/@href'.format(i = i)
@@ -29,6 +28,7 @@ class DGSSpider(scrapy.Spider):
             last_report_link = response.selector.xpath(path).get()
 
             self.extract_daily_count(last_report_link, final_data, date_text)
+            self.extract_cases_by_zone(last_report_link)
 
         self.generate_results(final_data)             
 
@@ -42,6 +42,7 @@ class DGSSpider(scrapy.Spider):
 
             confirmed_cases_number = 0
             deaths = 0
+            recovered = 0
 
             content =  page1.extractText()
             content_words = content.split()
@@ -52,9 +53,12 @@ class DGSSpider(scrapy.Spider):
                     if content_words[i - 1].strip() == 'asos' or content_words[i - 1].strip() == 'casos':
                         confirmed_cases_number = content_words[i + 1].strip()
                 elif unidecode.unidecode(content_words[i].strip()) == unidecode.unidecode('Obitos'):
-                    deaths = content_words[i + 1].strip()            
+                    deaths = content_words[i + 1].strip()
+                elif content_words[i].strip() == 'recuperados':
+                    if content_words[i - 1].strip() == 'Casos':
+                        recovered = content_words[i + 1].strip()          
 
-            data_list.append(DGSData(deaths, confirmed_cases_number, data))
+            data_list.append(DGSData(deaths, confirmed_cases_number, data, recovered))
 
     def generate_results(self, data):
         if not os.path.exists('results'):
@@ -63,16 +67,29 @@ class DGSSpider(scrapy.Spider):
             maped_data = map(lambda d: d.to_json(), data)
             json.dump(list(maped_data), file)
 
+    def extract_cases_by_zone(self, last_report_link):
+
+        response = requests.get(last_report_link)
+        
+        with open('/tmp/' + os.path.basename(os.path.normpath(last_report_link)) , 'wb') as f:
+            f.write(response.content)
+            pdf = PdfFileReader('/tmp/' + os.path.basename(os.path.normpath(last_report_link)))
+            page2 = pdf.getPage(2)
+            content =  page2.extractText()
+            #print(content)
+
 class DGSData:
 
-    def __init__(self, deaths, cases, date):
+    def __init__(self, deaths, cases, date, recovered = 0):
        self.deaths = deaths
        self.cases = cases
        self.date = date
+       self.recovered = recovered
 
     def to_json(self):
         return {
             "deaths": self.deaths,
             "cases": self.cases,
+            "recovered": self.recovered,
             "date": self.date.__str__()
         }
