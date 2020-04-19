@@ -10,23 +10,26 @@ const Index = (props) => {
     const [fullInfo, setFullInfo] = useState([])
     const [lastCases, setLastCases] = useState(0)
     const [lastDeaths, setLasDeaths] = useState(0)
+    const [lastRecovered, setLastRecovered] = useState(undefined)
 
     const [loading, setLoading] = useState(false)
 
     async function callOMSData() {
         setLoading(true)
-        const { full_data, cases, deaths } = await CovidAPI.getFullDataFromOMS().then(data => { return data }).finally(() => setLoading(false))
+        const { full_data, cases, deaths, recovered } = await CovidAPI.getFullDataFromOMS().then(data => { return data }).finally(() => setLoading(false))
         setFullInfo(full_data)
         setLastCases(cases)
         setLasDeaths(deaths)
+        setLastRecovered(recovered)
     }
 
     async function callDGSData() {
         setLoading(true)
-        const { full_data, cases, deaths } = await CovidAPI.getFullDataFromDGS().then(data => { return data }).finally(() => setLoading(false))
+        const { full_data, cases, deaths, recovered } = await CovidAPI.getFullDataFromDGS().then(data => { return data }).finally(() => setLoading(false))
         setFullInfo(full_data)
         setLastCases(cases)
         setLasDeaths(deaths)
+        setLastRecovered(recovered)
     }
 
     const switch_data_source = (source) => {
@@ -56,7 +59,7 @@ const Index = (props) => {
 
             <Divider />
 
-            <CardsInfo cases={lastCases} deaths={lastDeaths} loading={loading} />
+            <CardsInfo cases={lastCases} deaths={lastDeaths} recovered={lastRecovered} loading={loading} />
 
             <Divider />
 
