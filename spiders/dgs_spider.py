@@ -23,7 +23,9 @@ class DGSSpider(scrapy.Spider):
             path = '//*[@id="content_easy"]/div[3]/ul[1]/li[{i}]/a/@href'.format(i = i)
             li_text = response.selector.xpath('//*[@id="content_easy"]/div[3]/ul[1]/li[{i}]/a/text()'.format(i = i)).get()
             
-            date_text = datetime.datetime.strptime(li_text.split("|")[1].strip(), "%d/%m/%Y")
+            text_date_formated = li_text.strip()
+
+            date_text = datetime.datetime.strptime(text_date_formated.split("|")[1].strip(), "%d/%m/%Y")
 
             last_report_link = response.selector.xpath(path).get()
 
@@ -77,6 +79,9 @@ class DGSSpider(scrapy.Spider):
             page2 = pdf.getPage(2)
             content =  page2.extractText()
             #print(content)
+
+    def extract_common_symptoms(self):
+        pass
 
 class DGSData:
 
