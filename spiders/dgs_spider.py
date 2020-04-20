@@ -23,14 +23,15 @@ class DGSSpider(scrapy.Spider):
             path = '//*[@id="content_easy"]/div[3]/ul[1]/li[{i}]/a/@href'.format(i = i)
             li_text = response.selector.xpath('//*[@id="content_easy"]/div[3]/ul[1]/li[{i}]/a/text()'.format(i = i)).get()
             
+            last_report_link = response.selector.xpath(path).get()
+            self.extract_common_symptoms(last_report_link)
+
             text_date_formated = li_text.strip()
 
             date_text = datetime.datetime.strptime(text_date_formated.split("|")[1].strip(), "%d/%m/%Y")
 
-            last_report_link = response.selector.xpath(path).get()
 
             self.extract_daily_count(last_report_link, final_data, date_text)
-            self.extract_cases_by_zone(last_report_link)
 
         self.generate_results(final_data)             
 
@@ -80,8 +81,16 @@ class DGSSpider(scrapy.Spider):
             content =  page2.extractText()
             #print(content)
 
-    def extract_common_symptoms(self):
-        pass
+    def extract_common_symptoms(self, last_report_link):
+        response = requests.get(last_report_link)
+        
+        with open('/tmp/' + os.path.basename(os.path.normpath(last_report_link)) , 'wb') as f:
+            f.write(response.content)
+            pdf = PdfFileReader('/tmp/' + os.path.basename(os.path.normpath(last_report_link)))
+            page3 = pdf.getPage(3)
+            content =  page3.extractText()
+            splited_content = content.split()
+            print(splited_content)
 
 class DGSData:
 
